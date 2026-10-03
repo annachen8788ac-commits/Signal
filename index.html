@@ -3,267 +3,113 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Signal Workspace</title>
+<title>Signal Multi</title>
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<div class="app">
-  <aside class="dock">
-    <div class="mark">S</div>
-    <div class="dock-sep"></div>
-
-    <button class="dock-item active" data-target="signal-primary" aria-label="Signal Primary">
-      <span class="glyph signal">S</span>
-      <span class="active-indicator"></span>
-    </button>
-    <button class="dock-item" data-target="signal-business" aria-label="Signal Business">
-      <span class="glyph signal">S</span>
-    </button>
-    <button class="dock-item" data-target="whatsapp" aria-label="WhatsApp">
-      <span class="glyph whatsapp">W</span>
-    </button>
-    <button class="dock-item" data-target="web" aria-label="Web App">
-      <span class="glyph web">◎</span>
-    </button>
-
-    <button class="dock-item add" id="addWorkspace" aria-label="Add workspace">+</button>
-    <div class="dock-fill"></div>
-    <button class="dock-item muted" aria-label="Settings">⌘</button>
-  </aside>
-
-  <aside class="sidebar">
-    <div class="side-head">
-      <div>
-        <div class="kicker">WORKSPACE</div>
-        <h1>Signal Hub</h1>
-      </div>
-      <button class="quiet-btn">•••</button>
-    </div>
-
-    <div class="identity">
-      <div class="avatar">A</div>
-      <div class="identity-copy">
-        <strong>Anna</strong>
-        <span>Personal workspace</span>
-      </div>
-      <span class="presence"></span>
-    </div>
-
-    <div class="section-label">
-      <span>ACCOUNTS</span>
-      <button id="addAccount">Add</button>
-    </div>
-
-    <div class="account-list">
-      <button class="account active" data-target="signal-primary">
-        <span class="account-icon">S</span>
-        <span class="account-copy">
-          <strong>Signal · Primary</strong>
-          <small>Recruiting</small>
-        </span>
-        <span class="badge">8</span>
-      </button>
-
-      <button class="account" data-target="signal-business">
-        <span class="account-icon">S</span>
-        <span class="account-copy">
-          <strong>Signal · Business</strong>
-          <small>Clients</small>
-        </span>
-        <span class="dot"></span>
-      </button>
-
-      <button class="account" data-target="whatsapp">
-        <span class="account-icon alt">W</span>
-        <span class="account-copy">
-          <strong>WhatsApp</strong>
-          <small>Operations</small>
-        </span>
-      </button>
-
-      <button class="account" data-target="web">
-        <span class="account-icon ghost">◎</span>
-        <span class="account-copy">
-          <strong>Web app</strong>
-          <small>Custom session</small>
-        </span>
-      </button>
-    </div>
-
-    <div class="section-label tools-label"><span>TOOLS</span></div>
-
-    <button class="tool-row" id="translatorButton">
-      <span class="tool-mark">文</span>
-      <span class="account-copy">
-        <strong>Translate</strong>
-        <small>CN ⇄ EN</small>
-      </span>
-      <span class="arrow">›</span>
-    </button>
-
-    <button class="tool-row">
-      <span class="tool-mark">⌕</span>
-      <span class="account-copy">
-        <strong>Search all</strong>
-        <small>Across sessions</small>
-      </span>
-      <span class="arrow">›</span>
-    </button>
-
-    <div class="sidebar-footer">
-      <div class="footer-row">
-        <span>Sessions</span><strong>4 active</strong>
-      </div>
-      <div class="meter"><span></span></div>
-    </div>
+<div class="shell">
+  <aside class="rail">
+    <div class="brand">S</div>
+    <button class="rail-btn active">◫</button>
+    <button class="rail-btn" id="openGlobalTranslate">文</button>
+    <div class="rail-spacer"></div>
+    <button class="rail-btn" id="openSettings">⚙</button>
   </aside>
 
   <main class="main">
-    <header class="tabs">
-      <div class="traffic">
-        <span></span><span></span><span></span>
+    <header class="topbar">
+      <div>
+        <div class="eyebrow">DESKTOP INSTANCE MANAGER</div>
+        <h1>Signal Multi</h1>
       </div>
-      <button class="tab active">
-        <span class="tab-icon">S</span>
-        <span id="tabTitle">Signal · Primary</span>
-        <span class="tab-close">×</span>
-      </button>
-      <button class="tab-plus">+</button>
-      <div class="tabs-fill"></div>
-      <button class="top-icon">◫</button>
-      <button class="top-icon">⌕</button>
-      <div class="mini-avatar">A</div>
+      <div class="top-actions">
+        <button class="ghost" id="stopAll">全部停止</button>
+        <button class="primary" id="addProfile">+ 添加 Signal</button>
+      </div>
     </header>
 
-    <div class="toolbar">
-      <div class="nav-group">
-        <button>‹</button><button>›</button><button>↻</button>
+    <section class="hero">
+      <div>
+        <div class="hero-title">多个 Signal，独立运行。</div>
+        <p>每个账号使用自己的 Profile 目录和独立进程。这里不模拟聊天界面，只负责真正启动和管理 Signal Desktop 实例。</p>
       </div>
-      <div class="addressbar">
-        <span class="address-icon">◆</span>
-        <input id="addressInput" value="signal://primary" autocomplete="off">
-        <span class="session-chip">isolated</span>
+      <div class="hero-stat">
+        <strong id="runningCount">0</strong>
+        <span>运行中</span>
       </div>
-      <button class="toolbar-action" id="translateTop">文A</button>
-      <button class="toolbar-action">•••</button>
-    </div>
+    </section>
 
-    <section class="content">
-      <div class="conversation-list">
-        <div class="searchbox">⌕ <span>Search conversations</span></div>
-
-        <button class="conversation active">
-          <span class="person person-a">ER</span>
-          <span class="conversation-copy">
-            <strong>Edward Robles</strong>
-            <small>We can continue to talk...</small>
-          </span>
-          <time>3m</time>
-        </button>
-
-        <button class="conversation">
-          <span class="person person-b">WS</span>
-          <span class="conversation-copy">
-            <strong>Wael Sobhy</strong>
-            <small>Excited about the CBO position</small>
-          </span>
-          <time>21m</time>
-        </button>
-
-        <button class="conversation">
-          <span class="person person-c">BD</span>
-          <span class="conversation-copy">
-            <strong>Business Development</strong>
-            <small>New candidate update</small>
-          </span>
-          <time>1h</time>
-        </button>
+    <section class="notice" id="compatNotice">
+      <div class="notice-icon">!</div>
+      <div>
+        <strong>兼容性提示</strong>
+        <span>新版 Signal Desktop 对多 Profile 启动参数的支持可能因版本而异。如果某个实例仍跳回同一个账号，可为该 Profile 指定独立的 Signal 可执行文件。</span>
       </div>
+    </section>
 
-      <div class="chat">
-        <div class="chat-head">
-          <div class="person person-a">ER</div>
-          <div class="chat-title">
-            <strong>Edward Robles</strong>
-            <span><i></i> active now</span>
-          </div>
-          <div class="chat-actions"><button>⌕</button><button>•••</button></div>
+    <section class="section-head">
+      <div>
+        <span class="section-kicker">PROFILES</span>
+        <h2>Signal 实例</h2>
+      </div>
+      <button class="text-btn" id="refreshProfiles">刷新状态</button>
+    </section>
+
+    <section class="profile-grid" id="profileGrid"></section>
+
+    <section class="translator-card" id="translatorCard">
+      <div class="translator-head">
+        <div>
+          <span class="section-kicker">TRANSLATE</span>
+          <h2>网页翻译</h2>
         </div>
-
-        <div class="messages">
-          <div class="day-label">Today</div>
-
-          <div class="message incoming">
-            <div class="bubble">
-              Possibly, I will keep an open mind. Yes, I think we can continue to talk.
-            </div>
-            <span>10:42 AM</span>
-          </div>
-
-          <div class="message outgoing">
-            <div class="bubble">
-              Great. I want the next conversation to be practical and focused on role scope, compensation, and how quickly we can move.
-            </div>
-            <span>10:44 AM</span>
-          </div>
-
-          <div class="translation-note">
-            <span>文</span>
-            <div>
-              <strong>Translation ready</strong>
-              <small>Chinese ↔ English is available in the side panel.</small>
-            </div>
-            <button id="openTranslatorInline">Open</button>
-          </div>
-        </div>
-
-        <div class="composer">
-          <button class="attach">+</button>
-          <div class="compose-box">
-            <textarea id="messageInput" placeholder="Write a message…"></textarea>
-            <div class="compose-actions">
-              <button>☺</button>
-              <button id="quickTranslate">文A</button>
-            </div>
-          </div>
-          <button class="send">↑</button>
+        <button class="text-btn" id="closeTranslate">收起</button>
+      </div>
+      <div class="translate-row">
+        <textarea id="translateInput" placeholder="粘贴英文或中文…"></textarea>
+        <div class="translate-actions">
+          <select id="translateTarget">
+            <option value="zh-CN">翻译成中文</option>
+            <option value="en">Translate to English</option>
+          </select>
+          <button class="primary" id="translateExternal">打开网页翻译</button>
         </div>
       </div>
     </section>
   </main>
-
-  <aside class="translator" id="translatorPanel">
-    <div class="translator-head">
-      <div>
-        <div class="kicker">TRANSLATE</div>
-        <h2>Live assistant</h2>
-      </div>
-      <button id="closeTranslator">×</button>
-    </div>
-
-    <div class="lang-switch">
-      <button class="active">中文</button>
-      <span>⇄</span>
-      <button>English</button>
-    </div>
-
-    <label>Source</label>
-    <textarea id="sourceText" placeholder="Paste or type text…"></textarea>
-
-    <div class="translate-actions">
-      <button id="copySource">Copy</button>
-      <button class="primary" id="translateNow">Translate</button>
-    </div>
-
-    <label>Result</label>
-    <div class="result" id="translationResult">Translation will appear here.</div>
-
-    <div class="translator-tip">
-      <span>⌘</span>
-      <p>Desktop version keeps each web app in an isolated Electron session, Wavebox-style.</p>
-    </div>
-  </aside>
 </div>
+
+<dialog id="profileDialog">
+  <form method="dialog" class="dialog-card" id="profileForm">
+    <div class="dialog-head">
+      <div>
+        <span class="section-kicker">NEW PROFILE</span>
+        <h2>添加 Signal 实例</h2>
+      </div>
+      <button value="cancel" class="icon-btn">×</button>
+    </div>
+
+    <label>
+      <span>名称</span>
+      <input id="profileName" required placeholder="例如：招聘 / 客户 / 私人">
+    </label>
+
+    <label>
+      <span>Signal 可执行文件</span>
+      <div class="file-field">
+        <input id="profileExe" placeholder="自动检测，或选择 Signal.exe">
+        <button type="button" class="ghost" id="chooseExe">选择</button>
+      </div>
+    </label>
+
+    <p class="helper">每个实例会自动使用单独的数据目录。第一次启动时，Signal 会要求你扫码链接对应账号。</p>
+
+    <div class="dialog-actions">
+      <button value="cancel" class="ghost">取消</button>
+      <button type="submit" class="primary">创建实例</button>
+    </div>
+  </form>
+</dialog>
 
 <script src="renderer.js"></script>
 </body>
