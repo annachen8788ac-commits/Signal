@@ -1,0 +1,47 @@
+name: Build Windows Signal Multi
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ["main"]
+    paths:
+      - "index.html"
+      - "styles.css"
+      - "renderer.js"
+      - "main.js"
+      - "preload.js"
+      - "package.json"
+      - ".github/workflows/build-windows.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Windows app
+        run: npm run dist -- --win
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Windows installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: Signal-Multi-Windows
+          path: |
+            dist/*.exe
+            dist/*.yml
+          if-no-files-found: error
