@@ -3,281 +3,268 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Signal 多工作区</title>
-<style>
-:root{
-  --bg:#0f1115;--panel:#151820;--panel2:#1c2029;--line:#2d3442;
-  --text:#fff;--muted:#aeb6c5;--accent:#5865f2;--accent2:#7380ff;
-}
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,"Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text)}
-header{padding:14px 18px;background:#171a21;border-bottom:1px solid var(--line);display:flex;gap:10px;align-items:center;position:sticky;top:0;z-index:10}
-header h1{font-size:18px;margin:0;flex:1}
-button,input,select,textarea{font:inherit}
-button{background:var(--accent);color:#fff;border:0;border-radius:8px;padding:9px 12px;cursor:pointer}
-button:hover{background:var(--accent2)}
-button.secondary{background:#252a35}
-button.secondary:hover{background:#303745}
-main{display:grid;grid-template-columns:270px 1fr 350px;min-height:calc(100vh - 58px)}
-aside,.right{padding:14px;background:var(--panel);overflow:auto}
-aside{border-right:1px solid var(--line)}.right{border-left:1px solid var(--line)}
-.card{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px;margin-bottom:10px}
-.card b{display:block;margin-bottom:4px}.muted{color:var(--muted);font-size:12px}
-.work{padding:14px;overflow:auto}
-.pane{background:#1a1e27;border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:12px}
-.row{display:flex;gap:8px;align-items:center}.row>*{flex:1}
-input,select,textarea{width:100%;background:#0f1218;color:#fff;border:1px solid #343b4a;border-radius:8px;padding:9px}
-textarea{min-height:180px;resize:vertical;margin-top:10px}
-a.launch{display:inline-block;text-decoration:none;background:var(--accent);color:#fff;border-radius:8px;padding:9px 12px}
-.section-title{display:flex;justify-content:space-between;align-items:center}
-.badge{display:inline-block;padding:3px 7px;border:1px solid var(--line);border-radius:999px;font-size:11px;color:var(--muted);margin-left:6px}
-.actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
-.notice{background:#131722;border:1px dashed #343b4a;border-radius:10px;padding:10px;color:var(--muted);font-size:12px;margin-top:10px}
-@media(max-width:980px){main{grid-template-columns:1fr}.right,aside{border:0}.right{order:3}}
-</style>
+<title>Signal Workspace</title>
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<header>
-  <h1>Signal 多工作区 + 网页翻译</h1>
-  <button onclick="addAccount()">添加 Signal 身份</button>
-  <button class="secondary" onclick="addWeb()">添加网页</button>
-</header>
+<div class="app">
+  <aside class="dock">
+    <div class="mark">S</div>
+    <div class="dock-sep"></div>
 
-<main>
-  <aside>
-    <div class="section-title">
-      <h3>Signal 身份</h3>
-      <span class="badge" id="accountCount">0</span>
+    <button class="dock-item active" data-target="signal-primary" aria-label="Signal Primary">
+      <span class="glyph signal">S</span>
+      <span class="active-indicator"></span>
+    </button>
+    <button class="dock-item" data-target="signal-business" aria-label="Signal Business">
+      <span class="glyph signal">S</span>
+    </button>
+    <button class="dock-item" data-target="whatsapp" aria-label="WhatsApp">
+      <span class="glyph whatsapp">W</span>
+    </button>
+    <button class="dock-item" data-target="web" aria-label="Web App">
+      <span class="glyph web">◎</span>
+    </button>
+
+    <button class="dock-item add" id="addWorkspace" aria-label="Add workspace">+</button>
+    <div class="dock-fill"></div>
+    <button class="dock-item muted" aria-label="Settings">⌘</button>
+  </aside>
+
+  <aside class="sidebar">
+    <div class="side-head">
+      <div>
+        <div class="kicker">WORKSPACE</div>
+        <h1>Signal Hub</h1>
+      </div>
+      <button class="quiet-btn">•••</button>
     </div>
-    <div id="accounts"></div>
-    <div class="notice">
-      浏览器网页不能直接创建多个独立 Signal 登录会话。这里用于管理多个 Signal 环境，
-      保存每个账号对应的启动入口，例如远程桌面、自定义协议或其他你自己的运行环境。
+
+    <div class="identity">
+      <div class="avatar">A</div>
+      <div class="identity-copy">
+        <strong>Anna</strong>
+        <span>Personal workspace</span>
+      </div>
+      <span class="presence"></span>
+    </div>
+
+    <div class="section-label">
+      <span>ACCOUNTS</span>
+      <button id="addAccount">Add</button>
+    </div>
+
+    <div class="account-list">
+      <button class="account active" data-target="signal-primary">
+        <span class="account-icon">S</span>
+        <span class="account-copy">
+          <strong>Signal · Primary</strong>
+          <small>Recruiting</small>
+        </span>
+        <span class="badge">8</span>
+      </button>
+
+      <button class="account" data-target="signal-business">
+        <span class="account-icon">S</span>
+        <span class="account-copy">
+          <strong>Signal · Business</strong>
+          <small>Clients</small>
+        </span>
+        <span class="dot"></span>
+      </button>
+
+      <button class="account" data-target="whatsapp">
+        <span class="account-icon alt">W</span>
+        <span class="account-copy">
+          <strong>WhatsApp</strong>
+          <small>Operations</small>
+        </span>
+      </button>
+
+      <button class="account" data-target="web">
+        <span class="account-icon ghost">◎</span>
+        <span class="account-copy">
+          <strong>Web app</strong>
+          <small>Custom session</small>
+        </span>
+      </button>
+    </div>
+
+    <div class="section-label tools-label"><span>TOOLS</span></div>
+
+    <button class="tool-row" id="translatorButton">
+      <span class="tool-mark">文</span>
+      <span class="account-copy">
+        <strong>Translate</strong>
+        <small>CN ⇄ EN</small>
+      </span>
+      <span class="arrow">›</span>
+    </button>
+
+    <button class="tool-row">
+      <span class="tool-mark">⌕</span>
+      <span class="account-copy">
+        <strong>Search all</strong>
+        <small>Across sessions</small>
+      </span>
+      <span class="arrow">›</span>
+    </button>
+
+    <div class="sidebar-footer">
+      <div class="footer-row">
+        <span>Sessions</span><strong>4 active</strong>
+      </div>
+      <div class="meter"><span></span></div>
     </div>
   </aside>
 
-  <section class="work">
-    <div class="section-title">
-      <h3>网页工作区</h3>
-      <span class="badge" id="webCount">0</span>
-    </div>
-    <div id="webs"></div>
-  </section>
-
-  <section class="right">
-    <h3>翻译工具</h3>
-    <div class="row">
-      <select id="from">
-        <option value="auto">自动识别</option>
-        <option value="zh-CN">中文</option>
-        <option value="en">English</option>
-        <option value="es">Español</option>
-        <option value="fr">Français</option>
-        <option value="de">Deutsch</option>
-        <option value="ja">日本語</option>
-        <option value="ko">한국어</option>
-      </select>
-      <select id="to">
-        <option value="zh-CN">中文</option>
-        <option value="en">English</option>
-        <option value="es">Español</option>
-        <option value="fr">Français</option>
-        <option value="de">Deutsch</option>
-        <option value="ja">日本語</option>
-        <option value="ko">한국어</option>
-      </select>
-    </div>
-
-    <textarea id="text" placeholder="粘贴需要翻译的内容……"></textarea>
-
-    <div class="actions">
-      <button onclick="translateText()">打开翻译</button>
-      <button class="secondary" onclick="swapLang()">交换语言</button>
-      <button class="secondary" onclick="copyText()">复制原文</button>
-    </div>
-
-    <div class="notice">
-      翻译会在新标签页打开 Google Translate，这样可以绕过大部分浏览器跨域限制。
-    </div>
-  </section>
-</main>
-
-<script>
-const $ = s => document.querySelector(s);
-
-let accounts = JSON.parse(localStorage.getItem('signal.accounts') || '[]');
-let webs = JSON.parse(localStorage.getItem('signal.webs') || '[]');
-
-function save(){
-  localStorage.setItem('signal.accounts', JSON.stringify(accounts));
-  localStorage.setItem('signal.webs', JSON.stringify(webs));
-}
-
-function safe(s){
-  return String(s || '').replace(/[&<>"']/g, m => ({
-    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
-  }[m]));
-}
-
-function normalize(url){
-  url = (url || '').trim();
-  if(!url) return '';
-  return /^[a-z][a-z0-9+.-]*:/i.test(url) ? url : 'https://' + url;
-}
-
-function renderAccounts(){
-  $('#accountCount').textContent = accounts.length;
-  const el = $('#accounts');
-  if(!accounts.length){
-    el.innerHTML = '<div class="muted">还没有添加 Signal 身份。</div>';
-    return;
-  }
-
-  el.innerHTML = accounts.map((a,i) => `
-    <div class="card">
-      <b>${safe(a.name)}</b>
-      <div class="muted">${safe(a.note || '未填写备注')}</div>
-      <div class="actions">
-        ${a.url ? `<a class="launch" href="${safe(normalize(a.url))}" target="_blank" rel="noopener noreferrer">启动</a>` : ''}
-        <button class="secondary" onclick="editAccount(${i})">编辑</button>
-        <button class="secondary" onclick="removeAccount(${i})">删除</button>
+  <main class="main">
+    <header class="tabs">
+      <div class="traffic">
+        <span></span><span></span><span></span>
       </div>
+      <button class="tab active">
+        <span class="tab-icon">S</span>
+        <span id="tabTitle">Signal · Primary</span>
+        <span class="tab-close">×</span>
+      </button>
+      <button class="tab-plus">+</button>
+      <div class="tabs-fill"></div>
+      <button class="top-icon">◫</button>
+      <button class="top-icon">⌕</button>
+      <div class="mini-avatar">A</div>
+    </header>
+
+    <div class="toolbar">
+      <div class="nav-group">
+        <button>‹</button><button>›</button><button>↻</button>
+      </div>
+      <div class="addressbar">
+        <span class="address-icon">◆</span>
+        <input id="addressInput" value="signal://primary" autocomplete="off">
+        <span class="session-chip">isolated</span>
+      </div>
+      <button class="toolbar-action" id="translateTop">文A</button>
+      <button class="toolbar-action">•••</button>
     </div>
-  `).join('');
-}
 
-function addAccount(){
-  const name = prompt('这个 Signal 身份叫什么？例如：招聘账号');
-  if(!name) return;
-  const note = prompt('号码或备注（可留空）') || '';
-  const url = prompt('启动地址（可留空）\n例如：远程桌面地址、自定义协议或你自己的管理入口') || '';
-  accounts.push({name, note, url});
-  save();
-  renderAccounts();
-}
+    <section class="content">
+      <div class="conversation-list">
+        <div class="searchbox">⌕ <span>Search conversations</span></div>
 
-function editAccount(i){
-  const a = accounts[i];
-  const name = prompt('名称', a.name);
-  if(name === null || !name.trim()) return;
-  const note = prompt('号码或备注', a.note || '');
-  if(note === null) return;
-  const url = prompt('启动地址', a.url || '');
-  if(url === null) return;
-  accounts[i] = {name:name.trim(), note:note.trim(), url:url.trim()};
-  save();
-  renderAccounts();
-}
+        <button class="conversation active">
+          <span class="person person-a">ER</span>
+          <span class="conversation-copy">
+            <strong>Edward Robles</strong>
+            <small>We can continue to talk...</small>
+          </span>
+          <time>3m</time>
+        </button>
 
-function removeAccount(i){
-  if(!confirm('确定删除这个 Signal 身份吗？')) return;
-  accounts.splice(i,1);
-  save();
-  renderAccounts();
-}
+        <button class="conversation">
+          <span class="person person-b">WS</span>
+          <span class="conversation-copy">
+            <strong>Wael Sobhy</strong>
+            <small>Excited about the CBO position</small>
+          </span>
+          <time>21m</time>
+        </button>
 
-function renderWebs(){
-  $('#webCount').textContent = webs.length;
-  const el = $('#webs');
-  if(!webs.length){
-    el.innerHTML = '<div class="muted">点击顶部“添加网页”开始。</div>';
-    return;
-  }
-
-  el.innerHTML = webs.map((w,i) => `
-    <div class="pane">
-      <div class="row">
-        <input id="web-${i}" value="${safe(w.url || '')}" placeholder="https://example.com">
-        <button onclick="openWeb(${i})">打开</button>
+        <button class="conversation">
+          <span class="person person-c">BD</span>
+          <span class="conversation-copy">
+            <strong>Business Development</strong>
+            <small>New candidate update</small>
+          </span>
+          <time>1h</time>
+        </button>
       </div>
-      <div class="actions">
-        <button class="secondary" onclick="translateWeb(${i})">翻译网页</button>
-        <button class="secondary" onclick="duplicateWeb(${i})">复制窗口</button>
-        <button class="secondary" onclick="removeWeb(${i})">删除</button>
+
+      <div class="chat">
+        <div class="chat-head">
+          <div class="person person-a">ER</div>
+          <div class="chat-title">
+            <strong>Edward Robles</strong>
+            <span><i></i> active now</span>
+          </div>
+          <div class="chat-actions"><button>⌕</button><button>•••</button></div>
+        </div>
+
+        <div class="messages">
+          <div class="day-label">Today</div>
+
+          <div class="message incoming">
+            <div class="bubble">
+              Possibly, I will keep an open mind. Yes, I think we can continue to talk.
+            </div>
+            <span>10:42 AM</span>
+          </div>
+
+          <div class="message outgoing">
+            <div class="bubble">
+              Great. I want the next conversation to be practical and focused on role scope, compensation, and how quickly we can move.
+            </div>
+            <span>10:44 AM</span>
+          </div>
+
+          <div class="translation-note">
+            <span>文</span>
+            <div>
+              <strong>Translation ready</strong>
+              <small>Chinese ↔ English is available in the side panel.</small>
+            </div>
+            <button id="openTranslatorInline">Open</button>
+          </div>
+        </div>
+
+        <div class="composer">
+          <button class="attach">+</button>
+          <div class="compose-box">
+            <textarea id="messageInput" placeholder="Write a message…"></textarea>
+            <div class="compose-actions">
+              <button>☺</button>
+              <button id="quickTranslate">文A</button>
+            </div>
+          </div>
+          <button class="send">↑</button>
+        </div>
       </div>
-      <div class="muted" style="margin-top:8px">
-        网页使用新标签页打开，避免被 iframe / CSP 安全策略拦截。
+    </section>
+  </main>
+
+  <aside class="translator" id="translatorPanel">
+    <div class="translator-head">
+      <div>
+        <div class="kicker">TRANSLATE</div>
+        <h2>Live assistant</h2>
       </div>
+      <button id="closeTranslator">×</button>
     </div>
-  `).join('');
-}
 
-function addWeb(){
-  webs.push({url:''});
-  save();
-  renderWebs();
-}
+    <div class="lang-switch">
+      <button class="active">中文</button>
+      <span>⇄</span>
+      <button>English</button>
+    </div>
 
-function openWeb(i){
-  const input = document.getElementById('web-' + i);
-  const url = normalize(input.value);
-  if(!url) return;
-  webs[i].url = url;
-  save();
-  window.open(url, '_blank', 'noopener,noreferrer');
-}
+    <label>Source</label>
+    <textarea id="sourceText" placeholder="Paste or type text…"></textarea>
 
-function translateWeb(i){
-  const input = document.getElementById('web-' + i);
-  const url = normalize(input.value);
-  if(!url) return;
-  webs[i].url = url;
-  save();
-  const target = $('#to').value;
-  const trans = 'https://translate.google.com/translate?sl=auto&tl=' +
-    encodeURIComponent(target) + '&u=' + encodeURIComponent(url);
-  window.open(trans, '_blank', 'noopener,noreferrer');
-}
+    <div class="translate-actions">
+      <button id="copySource">Copy</button>
+      <button class="primary" id="translateNow">Translate</button>
+    </div>
 
-function duplicateWeb(i){
-  webs.splice(i + 1, 0, {url:webs[i].url || ''});
-  save();
-  renderWebs();
-}
+    <label>Result</label>
+    <div class="result" id="translationResult">Translation will appear here.</div>
 
-function removeWeb(i){
-  webs.splice(i,1);
-  save();
-  renderWebs();
-}
+    <div class="translator-tip">
+      <span>⌘</span>
+      <p>Desktop version keeps each web app in an isolated Electron session, Wavebox-style.</p>
+    </div>
+  </aside>
+</div>
 
-function translateText(){
-  const text = $('#text').value.trim();
-  if(!text) return;
-  const sl = $('#from').value;
-  const tl = $('#to').value;
-  const url = 'https://translate.google.com/?sl=' +
-    encodeURIComponent(sl) + '&tl=' + encodeURIComponent(tl) +
-    '&text=' + encodeURIComponent(text) + '&op=translate';
-  window.open(url, '_blank', 'noopener,noreferrer');
-}
-
-function swapLang(){
-  const from = $('#from');
-  const to = $('#to');
-  if(from.value === 'auto'){
-    from.value = to.value;
-    to.value = 'en';
-  }else{
-    const tmp = from.value;
-    from.value = to.value;
-    to.value = tmp;
-  }
-}
-
-async function copyText(){
-  const text = $('#text').value;
-  if(!text) return;
-  try{
-    await navigator.clipboard.writeText(text);
-    alert('已复制');
-  }catch{
-    alert('浏览器不允许自动复制，请手动复制。');
-  }
-}
-
-renderAccounts();
-renderWebs();
-</script>
+<script src="renderer.js"></script>
 </body>
 </html>
